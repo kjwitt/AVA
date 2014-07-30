@@ -184,11 +184,24 @@ class UI(Frame):
       self.mn_bin.append(self.cnv_mn.create_rectangle(3,162,40,202,fill=indigo,outline=indigo))
       self.mn_bin.append(self.cnv_mn.create_rectangle(3,202,40,242,fill=indigo,outline=indigo))
       self.set_bin(self.cnv_mn,self.ava.cal.time_mn_bin,self.mn_bin)
+      self.after(1000,self.update_clock)
+
+   def update_clock(self):
+      self.ava.cal.update()
+      self.set_bin(self.cnv_dow,self.ava.cal.dow,self.dow_rect_bin)
+      self.set_bin(self.cnv_hr,self.ava.cal.time_hr_bin,self.hr_bin)
+      self.set_bin(self.cnv_mn,self.ava.cal.time_mn_bin,self.mn_bin)
+      self.lbl_hr.config(text=self.ava.cal.time_hr)
+      self.lbl_mn.config(text=self.ava.cal.time_mn)
+      self.lbl_date.config(text=self.ava.cal.date_str)
+      self.after(1000,self.update_clock)
+
+
 
 
    def set_bin(self,cnv,ctrl_array,ui_array):
-      print ctrl_array
-      print ui_array
+      # print ctrl_array
+      # print ui_array
       for ctrl,ui in zip(ctrl_array,reversed(ui_array)):
          if ctrl==True:
             cnv.itemconfig(ui,fill=cream,outline=cream)
@@ -199,7 +212,7 @@ class UI(Frame):
 
    def exit(self,event):
       # query = repr(event.char)
-      root.quit()
+      self.quit()
 
 def main():
    root = Tk()
@@ -210,6 +223,7 @@ def main():
    root.geometry("%dx%d+0+0" % (w/2-16, h-79))
    app = UI(root)
    root.mainloop() 
+
 
 if __name__ == '__main__':
    main()
