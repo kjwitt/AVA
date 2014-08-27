@@ -115,10 +115,14 @@ class Calendar:
       if len(self.date_mo) ==1:
          self.date_mo ='0' + self.date_mo
       self.date_str =  self.date_dy+'.'+self.date_mo+'.'+self.date_yr
-      self.time_hr = datetime.datetime.now().time().hour
+      self.time_hr = str(datetime.datetime.now().time().hour)
       self.time_hr_bin = num2binarray(datetime.datetime.now().time().hour,5)
-      self.time_mn = datetime.datetime.now().time().minute
+      self.time_mn = str(datetime.datetime.now().time().minute)
       self.time_mn_bin = num2binarray(datetime.datetime.now().time().minute,6)
+      if len(self.time_hr) == 1:
+         self.time_hr = '0' + self.time_hr
+      if len(self.time_mn) ==1:
+         self.time_mn ='0' + self.time_mn
 
 class UI(Frame):
    def __init__(self, parent):
