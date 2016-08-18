@@ -22,8 +22,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 
-# Config Files
-[Cc]onfig/
+# Special Attributes
+[Ss]ensative/
 
 # Visual Studio 2015 cache/options directory
 .vs/
