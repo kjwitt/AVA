@@ -10,6 +10,7 @@ namespace Backend
     {
         static void Main(string[] args)
         {
+            Messenger lol = new Messenger();
         }
     }
 }
