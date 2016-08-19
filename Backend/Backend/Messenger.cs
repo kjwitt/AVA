@@ -65,7 +65,7 @@ namespace Backend
                 mm.Dispose();
 
                 string DebugMessage = "(" + subject + ") " + body + " sent to " + email;
-                Console.Write(DebugMessage);
+                Console.WriteLine(DebugMessage);
             }
         }
     }
