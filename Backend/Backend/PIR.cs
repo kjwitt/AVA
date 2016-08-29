@@ -9,21 +9,29 @@ namespace Backend
 {
     class PIR
     {
-        const ConnectorPin PIRPin = ConnectorPin.P1Pin07;
         public bool status = false;
 
         public PIR()
         {
-            var PIRSensor = PIRPin.Input()
-                .Name("Switch")
-                .Revert()
-                .Switch()
-                .Enable()
-                .OnStatusChanged(b =>
-                {
-                    status = b;
-                    Console.WriteLine("PIR switched {0}", b ? "on" : "off");
-                });
-        }       
+            ConnectorPin PIRPin = ConnectorPin.P1Pin07;
+
+            var procPin = PIRPin.ToProcessor();
+
+            var driver = GpioConnectionSettings.DefaultDriver;
+
+            driver.Allocate(procPin, PinDirection.Input);
+
+            var isHigh = driver.Read(procPin);
+
+            while (true)
+            {
+                var now = DateTime.Now;
+
+                Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + (isHigh ? "HIGH" : "LOW"));
+
+                driver.Wait(procPin, !isHigh, TimeSpan.FromDays(7)); //TODO: infinite
+                isHigh = !isHigh;
+            }
+        }
     }
 }

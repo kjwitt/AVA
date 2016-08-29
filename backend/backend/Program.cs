@@ -20,16 +20,15 @@ namespace Backend
             //lol.WriteMessage("Test", "Brielle, you might get some messages because I'm testing my new framework. Sorry in advance.");
             TTS lol = new Backend.TTS();
 
-            lol.Speak("Ok here goes nothing...");
+            lol.Speak("Hello! My name is Awva, and I am your personal home assistant.");
+
+            Camera test = new Camera();
+            test.TakePic();
+
+            PIR MotionDetect = new PIR();
+
+
         }
 
-        /*static public void PlaySound(Stream sound)
-        {
-            
-            sound.Position = 0;     // Manually rewind stream 
-            player.Stream = null;    // Then we have to set stream to null 
-            player.Stream = sound;  // And set it again, to force it to be loaded again... 
-            player.Play();          // Yes! We can play the sound! 
-        }*/
     }
 }
