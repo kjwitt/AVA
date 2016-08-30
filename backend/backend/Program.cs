@@ -23,7 +23,12 @@ namespace Backend
             lol.Speak("Hello! My name is Awva, and I am your personal home assistant.");
 
             Camera test = new Camera();
-            test.TakePic();
+
+            for (int i = 0; i < 100; i++)
+            {
+                test.TakePic();
+                Console.WriteLine(i);
+            }
 
             PIR MotionDetect = new PIR();
 
