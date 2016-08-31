@@ -15,27 +15,33 @@ namespace Backend
 {
     class Camera
     {
+        double FrameRate;
+        Capture capture;
         public Camera()
-        {         
-            
+        {
+            capture = new Capture(); //create a camera captue
+            capture.SetCaptureProperty(CapProp.FrameWidth, 2592);
+            capture.SetCaptureProperty(CapProp.FrameHeight, 1944);
+            capture.FlipVertical = true;
+            FrameRate = capture.GetCaptureProperty(CapProp.Fps);
         }
         public void TakePic()
         {
 
-            Capture capture = new Capture(); //create a camera captue
-            capture.SetCaptureProperty(CapProp.FrameWidth, 2592);
-            capture.SetCaptureProperty(CapProp.FrameHeight, 1944);
-            capture.FlipVertical = true;
-            double FrameRate = capture.GetCaptureProperty(CapProp.Fps);
+            
+
+            //Console.WriteLine(FrameRate);
 
             Mat frame = new Mat();
-            capture.QueryFrame();
+            //frame = capture.QueryFrame();
 
+            capture.Grab();
+            capture.Retrieve(frame, 0);
 
             frame.Save("/home/pi/AVA/Photos/" + string.Format("{0:yyyy-MM-dd hh_mm_ss_fftt}", DateTime.Now) + ".jpg");
-            Thread.Sleep((int)(1000.0 / FrameRate));
+            //Thread.Sleep((int)(1000.0 / FrameRate));
             frame.Dispose();
-            capture.Dispose();
+            //capture.Dispose();
         }
 
 
@@ -45,11 +51,3 @@ namespace Backend
 
 //2592, 1944
 //1920×1440
-
-//cameras = Cameras.DeclareDevice()
-//              .Named("Camera 1")
-//            .WithDevicePath("/dev/video0")
-//          .Memorize();
-//cam
-
-//eras.Get("Camera 1").SavePicture(new PictureSize(1920,1440), "/home/pi/AVA/Photos/test2.jpg",0);
