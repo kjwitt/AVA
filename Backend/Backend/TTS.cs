@@ -10,14 +10,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Media;
+using System.Collections;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Backend
 {
     class TTS
     {
-        string AccessKey;
-        string SecretKey;
-        const string CredentialsPath = "sensative/IvonaCredentials.config";
+        private string AccessKey;
+        private string SecretKey;
+        private const string CredentialsPath = "sensative/IvonaCredentials.config";
+
+        public ConcurrentQueue<string> TTSQueue;
 
         public TTS()
         {
@@ -29,9 +34,31 @@ namespace Backend
                 AccessKey = words[0];
                 SecretKey = words[1];
             }
+
+            TTSQueue = new ConcurrentQueue<string>();
+
+            Thread newThread = new Thread(ProcessQueue);
+            newThread.Start();
+
         }
 
-        public void Speak(string text)
+        private void ProcessQueue()
+        {
+            while (true)
+            {
+                if (TTSQueue.Count > 0)
+                {
+                    string s = "";
+                    if (TTSQueue.TryDequeue(out s))
+                    {
+                        Speak(s);
+                    }
+                }
+
+            }
+        }
+
+        private void Speak(string text)
         {
             byte[] voice = AccessIvona(text);
             var path = "voice" + ".mp3";
@@ -40,7 +67,7 @@ namespace Backend
             p.WaitForExit();
         }
 
-        public byte[] AccessIvona(string text)
+        private byte[] AccessIvona(string text)
         {
             var date = DateTime.UtcNow;
 

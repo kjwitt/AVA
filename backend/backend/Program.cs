@@ -20,15 +20,21 @@ namespace Backend
             //lol.WriteMessage("Test", "Brielle, you might get some messages because I'm testing my new framework. Sorry in advance.");
             TTS lol = new Backend.TTS();
 
-            lol.Speak("Hello! My name is Awva, and I am your personal home assistant.");
+            lol.TTSQueue.Enqueue("Hello! My name is Awva, and I am your personal home assistant.");
 
             Camera test = new Camera();
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 3; i++)
             {
                 test.TakePic();
                 Console.WriteLine(i);
             }
+
+            lol.TTSQueue.Enqueue("Photos have been taken.");
+
+            PhonePing pinger = new PhonePing();
+
+            lol.TTSQueue.Enqueue("Phone IP addresses have been initialized");
 
             PIR MotionDetect = new PIR();
 

@@ -26,9 +26,7 @@ namespace Backend
             FrameRate = capture.GetCaptureProperty(CapProp.Fps);
         }
         public void TakePic()
-        {
-
-            
+        {           
 
             //Console.WriteLine(FrameRate);
 
