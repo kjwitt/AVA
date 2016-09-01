@@ -37,9 +37,12 @@ namespace Backend
 
             TTSQueue = new ConcurrentQueue<string>();
 
-            Thread newThread = new Thread(ProcessQueue);
-            newThread.Start();
+            Thread TTSThread = new Thread(ProcessQueue);
+            TTSThread.Start();
 
+            var now = DateTime.Now;
+
+            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(TTS) " + "Thread started");
         }
 
         private void ProcessQueue()
@@ -52,6 +55,10 @@ namespace Backend
                     if (TTSQueue.TryDequeue(out s))
                     {
                         Speak(s);
+
+                        var now = DateTime.Now;
+
+                        Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(TTS) " + "Said, "+"'"+s+"'");
                     }
                 }
 

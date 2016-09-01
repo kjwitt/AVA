@@ -16,27 +16,31 @@ namespace Backend
 
         static void Main(string[] args)
         {
-            //Messenger lol = new Messenger();
-            //lol.WriteMessage("Test", "Brielle, you might get some messages because I'm testing my new framework. Sorry in advance.");
-            TTS lol = new Backend.TTS();
-
-            lol.TTSQueue.Enqueue("Hello! My name is Awva, and I am your personal home assistant.");
-
-            Camera test = new Camera();
-
-            for (int i = 0; i < 3; i++)
-            {
-                test.TakePic();
-                Console.WriteLine(i);
-            }
-
-            lol.TTSQueue.Enqueue("Photos have been taken.");
-
-            PhonePing pinger = new PhonePing();
-
-            lol.TTSQueue.Enqueue("Phone IP addresses have been initialized");
-
+            Messenger Mail = new Messenger();
+            TTS Speech = new TTS();
+            Camera Cam = new Camera();
+            PhonePing Pinger = new PhonePing();
             PIR MotionDetect = new PIR();
+
+            Mail.MailQueue.Enqueue("System:AVA Started");    
+
+            Speech.TTSQueue.Enqueue("Hello! My name is Awva, and I am your personal home assistant.");    
+               
+            Cam.TakePic();
+            Speech.TTSQueue.Enqueue("A photo has been taken.");
+            Mail.MailQueue.Enqueue("Camera:Test picture has been taken");            
+
+            bool prevState = MotionDetect.status;
+
+            while (true)
+            {
+                if (prevState != MotionDetect.status)
+                {
+                    //Console.WriteLine(MotionDetect.status);
+                    prevState = MotionDetect.status;
+                }
+                
+            }
 
 
         }

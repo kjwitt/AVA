@@ -24,7 +24,12 @@ namespace Backend
             capture.SetCaptureProperty(CapProp.FrameHeight, 1944);
             capture.FlipVertical = true;
             FrameRate = capture.GetCaptureProperty(CapProp.Fps);
+
+            var now = DateTime.Now;
+
+            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Camera) " + "Camera initialized");
         }
+
         public void TakePic()
         {           
 
@@ -37,6 +42,10 @@ namespace Backend
             capture.Retrieve(frame, 0);
 
             frame.Save("/home/pi/AVA/Photos/" + string.Format("{0:yyyy-MM-dd hh_mm_ss_fftt}", DateTime.Now) + ".jpg");
+
+            var now = DateTime.Now;
+
+            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Camera) " + "Photo taken");
             //Thread.Sleep((int)(1000.0 / FrameRate));
             frame.Dispose();
             //capture.Dispose();
