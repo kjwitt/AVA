@@ -21,6 +21,7 @@ namespace Backend
         private SmtpClient SenderClient = new SmtpClient();
         public ConcurrentQueue<string> MailQueue;
 
+        private DebugMessenger Debug = new DebugMessenger("Mail");
 
         public Messenger()
         {
@@ -55,17 +56,14 @@ namespace Backend
                 delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
                 { return true; };
 
-            var now = DateTime.Now;
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Mail) " + "Using " + SenderEmailAddress);
+            Debug.DebugStatement("Using " + SenderEmailAddress,ConsoleColor.White);
 
             MailQueue = new ConcurrentQueue<string>();
 
             Thread MailThread = new Thread(ProcessQueue);
             MailThread.Start();
 
-            now = DateTime.Now;
-
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Mail) " + "Thread started");
+            Debug.DebugStatement("Thread started", ConsoleColor.White);
         }
 
         private void ProcessQueue()
@@ -98,7 +96,7 @@ namespace Backend
 
                 string DebugMessage = "'(" + subject + ") " + body + "' sent to " + email;
                 var now = DateTime.Now;
-                Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Mail) " + DebugMessage );
+                Debug.DebugStatement(DebugMessage, ConsoleColor.White);
             }
         }
     }

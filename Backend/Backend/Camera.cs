@@ -17,6 +17,10 @@ namespace Backend
     {
         double FrameRate;
         Capture capture;
+
+        private DebugMessenger Debug = new DebugMessenger("Camera");
+
+
         public Camera()
         {
             capture = new Capture(); //create a camera captue
@@ -25,9 +29,7 @@ namespace Backend
             capture.FlipVertical = true;
             FrameRate = capture.GetCaptureProperty(CapProp.Fps);
 
-            var now = DateTime.Now;
-
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Camera) " + "Camera initialized");
+            Debug.DebugStatement("Camera initialized",ConsoleColor.White);
         }
 
         public void TakePic()
@@ -43,9 +45,7 @@ namespace Backend
 
             frame.Save("/home/pi/AVA/Photos/" + string.Format("{0:yyyy-MM-dd hh_mm_ss_fftt}", DateTime.Now) + ".jpg");
 
-            var now = DateTime.Now;
-
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Camera) " + "Photo taken");
+            Debug.DebugStatement("Photo taken", ConsoleColor.White);
             //Thread.Sleep((int)(1000.0 / FrameRate));
             frame.Dispose();
             //capture.Dispose();

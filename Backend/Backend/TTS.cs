@@ -24,6 +24,8 @@ namespace Backend
 
         public ConcurrentQueue<string> TTSQueue;
 
+        private DebugMessenger Debug = new DebugMessenger("TTS");
+
         public TTS()
         {
             using (StreamReader sr = File.OpenText(CredentialsPath))
@@ -40,9 +42,7 @@ namespace Backend
             Thread TTSThread = new Thread(ProcessQueue);
             TTSThread.Start();
 
-            var now = DateTime.Now;
-
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(TTS) " + "Thread started");
+            Debug.DebugStatement("Thread started",ConsoleColor.White);
         }
 
         private void ProcessQueue()
@@ -55,10 +55,7 @@ namespace Backend
                     if (TTSQueue.TryDequeue(out s))
                     {
                         Speak(s);
-
-                        var now = DateTime.Now;
-
-                        Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(TTS) " + "Said, "+"'"+s+"'");
+                        Debug.DebugStatement("Said, " +"'"+s+"'", ConsoleColor.White);
                     }
                 }
 

@@ -19,6 +19,8 @@ namespace Backend
         public Dictionary<string, string> PhonesOnNetwork =
             new Dictionary<string, string>();
 
+        private DebugMessenger Debug = new DebugMessenger("Phone Ping");
+
         public PhonePing()
         {
             using(StreamReader sr = File.OpenText(PhoneInfoFilePath))
@@ -32,17 +34,13 @@ namespace Backend
                     //IPAddresses.Add(words[1]);
                 }
             }
-            var now = DateTime.Now;
             foreach (var pair in PhoneDirectory)
             {
-                now = DateTime.Now;
-
-                Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Phone Ping) " + "Registered Phone: " + pair.Key +", " + pair.Value);
+                Debug.DebugStatement("Registered Phone: " + pair.Key +", " + pair.Value,ConsoleColor.White);
             }
             Thread PhonePingThread = new Thread(OnNetwork);
             PhonePingThread.Start();
-            now = DateTime.Now;
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Phone Ping) " + "Thread started");
+            Debug.DebugStatement("Thread started", ConsoleColor.White);
         }
 
         private void OnNetwork()
@@ -54,11 +52,11 @@ namespace Backend
                     int i = 0;
                     bool on = false;
 
-                    TcpClient tcpclnt = new TcpClient();
-                    tcpclnt.Connect(pair.Key, 62078);
-                    tcpclnt.Close();
+                    //TcpClient tcpclnt = new TcpClient();
+                    //tcpclnt.Connect(pair.Key, 62078);
+                    //tcpclnt.Close();
 
-                    lol.Connect(pair.Key, 62078);
+                    //lol.Connect(pair.Key, 62078);
 
 
                     //ph_sendsocketdata1 ( "192.168.1.92", 62078, 6, "\x16" )
@@ -79,11 +77,11 @@ namespace Backend
                         try
                         {
                             PhonesOnNetwork.Add(pair.Key, pair.Value);
-                            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Phone Ping) " + pair.Value + "'s phone has joined the network");
+                            Debug.DebugStatement(pair.Value + "'s phone has joined the network", ConsoleColor.White);
                         }
                         catch
                         {
-                            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Phone Ping) " + pair.Value + "'s phone has already been detected - ignoring...");
+                            Debug.DebugStatement(pair.Value + "'s phone has already been detected - ignoring...", ConsoleColor.White);
                         }
 
                     }
@@ -91,11 +89,23 @@ namespace Backend
                     {
                         if(PhonesOnNetwork.Remove(pair.Key))
                         {
-                            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(Phone Ping) " + pair.Value + "'s phone has left the network");
+                            Debug.DebugStatement(pair.Value + "'s phone has left the network", ConsoleColor.White);
                         }
+                        else
+                        {
+                            Debug.DebugStatement(pair.Value + "'s phone is not on the network", ConsoleColor.White);
+                        }
+
                     }
-                }                
-                Thread.Sleep(60000);             
+                }
+                if (PhonesOnNetwork.Count > 0)
+                {
+                    Thread.Sleep(60000);
+                }
+                else
+                {
+                    Thread.Sleep(1000);
+                }
             }
         }
 

@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="DebugMessenger.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="PhonePing.cs" />
     <Compile Include="PIR.cs" />

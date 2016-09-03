@@ -12,41 +12,52 @@ namespace Backend
     {
         public bool status = false;
 
+        IGpioConnectionDriver driver = GpioConnectionSettings.DefaultDriver;
+        ProcessorPin procPin;
+
+        private DebugMessenger Debug = new DebugMessenger("PIR Sensor");
+
         public PIR()
         {
+            ConnectorPin PIRPin = ConnectorPin.P1Pin07;
+
+            procPin = PIRPin.ToProcessor();
+
+            //driver = GpioConnectionSettings.DefaultDriver;
+
+            driver.Allocate(procPin, PinDirection.Input);
+
+            Debug.DebugStatement("Sensor Setup Completed",ConsoleColor.White);
+
+
             Thread PIRThread = new Thread(SetStatus);
             PIRThread.Start();
 
-            var now = DateTime.Now;
-
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(PIR Sensor) " + "Thread Started");
+            Debug.DebugStatement("Thread Started",ConsoleColor.White);
         }
 
         private void SetStatus()
         {
-            ConnectorPin PIRPin = ConnectorPin.P1Pin07;
-
-            var procPin = PIRPin.ToProcessor();
-
-            var driver = GpioConnectionSettings.DefaultDriver;
-
-            driver.Allocate(procPin, PinDirection.Input);
-
-            var isHigh = driver.Read(procPin);
+            
 
             var now = DateTime.Now;
 
-            Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(PIR Sensor) " + "Sensor Setup Completed");
+            var isHigh = driver.Read(procPin);
+
+            var PrevState = isHigh;
 
             while (true)
             {
-                now = DateTime.Now;
+                isHigh = driver.Read(procPin);
+                //driver.Wait(procPin, !isHigh, TimeSpan.FromDays(7)); //TODO: infinite
 
-                Console.WriteLine(now + "." + now.Millisecond.ToString("000") + ": " + "(PIR Sensor) " + (isHigh ? "Movement indicated" : "Return to idle state"));
-
-                driver.Wait(procPin, !isHigh, TimeSpan.FromDays(7)); //TODO: infinite
-                isHigh = !isHigh;
+                if(isHigh!=PrevState)
+                {
+                    Debug.DebugStatement((isHigh ? "Movement indicated" : "Return to idle state"),ConsoleColor.White);
+                    PrevState = isHigh;
+                }
                 status = isHigh;
+                Thread.Sleep(500);
             }
         }
     }
